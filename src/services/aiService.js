@@ -11,6 +11,7 @@ const callHuggingFaceAPI = async (apiKey, prompt, maxTokens = 2000, retries = 3)
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
             console.log(`🌐 Calling AI via backend proxy (attempt ${attempt + 1}/${retries})...`);
+            console.log(`📍 API URL: ${API_BASE_URL}/ai/generate`);
 
             const response = await fetch(`${API_BASE_URL}/ai/generate`, {
                 method: 'POST',
@@ -24,8 +25,23 @@ const callHuggingFaceAPI = async (apiKey, prompt, maxTokens = 2000, retries = 3)
                 })
             });
 
+            // Check if response is HTML (error page)
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+                const htmlText = await response.text();
+                console.error('❌ Received HTML instead of JSON:', htmlText.substring(0, 200));
+                throw new Error(`Backend returned HTML instead of JSON. Check if API URL is correct: ${API_BASE_URL}/ai/generate`);
+            }
+
             if (!response.ok) {
-                const errorData = await response.json();
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch (e) {
+                    const text = await response.text();
+                    console.error('❌ Non-JSON error response:', text.substring(0, 200));
+                    throw new Error(`API error (${response.status}): ${text.substring(0, 100)}`);
+                }
 
                 // Check if model is loading (503 error)
                 if (response.status === 503 || (errorData.details && errorData.details.includes('loading'))) {
@@ -37,7 +53,7 @@ const callHuggingFaceAPI = async (apiKey, prompt, maxTokens = 2000, retries = 3)
 
                 // Check for authentication errors
                 if (response.status === 401 || response.status === 403) {
-                    throw new Error('Invalid API key. Please check your Hugging Face API key.');
+                    throw new Error('Invalid API key. Please check your Gemini API key.');
                 }
 
                 throw new Error(errorData.error || `API error (${response.status})`);
@@ -56,7 +72,7 @@ const callHuggingFaceAPI = async (apiKey, prompt, maxTokens = 2000, retries = 3)
                     await delay((attempt + 1) * 2000); // Exponential backoff
                     continue;
                 }
-                throw new Error('Network error: Unable to reach backend API. Please make sure the server is running.');
+                throw new Error(`Network error: Unable to reach backend API at ${API_BASE_URL}. Please make sure the server is running.`);
             }
 
             // If we're out of retries, throw the error
