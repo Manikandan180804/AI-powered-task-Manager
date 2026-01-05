@@ -1,6 +1,6 @@
 # AI-Powered Task Manager with MongoDB
 
-A smart task management application with AI features powered by Hugging Face and MongoDB database.
+A smart task management application with AI features powered by Google Gemini and MongoDB database.
 
 ## Features
 
@@ -25,14 +25,14 @@ A smart task management application with AI features powered by Hugging Face and
 - REST API
 
 ### AI
-- Hugging Face Inference API
-- Mistral Mixtral-8x7B model
+- Google Gemini API
+- Gemini 1.5 Flash model
 
 ## Prerequisites
 
 - Node.js (v18 or higher)
 - MongoDB (local or MongoDB Atlas)
-- Hugging Face API key
+- Google Gemini API key
 
 ## Installation
 
@@ -57,7 +57,7 @@ A smart task management application with AI features powered by Hugging Face and
 
    Create `.env.local` in the root directory:
    ```
-   VITE_HUGGINGFACE_API_KEY=your_huggingface_api_key
+   VITE_GEMINI_API_KEY=your_gemini_api_key
    VITE_API_URL=http://localhost:5000/api
    ```
 
@@ -93,11 +93,11 @@ The application will be available at:
 
 ## Getting API Keys
 
-### Hugging Face API Key
-1. Visit https://huggingface.co/settings/tokens
-2. Click "New token"
-3. Give it a name and select "Read" access
-4. Copy the token to your `.env.local` file
+### Google Gemini API Key
+1. Visit https://aistudio.google.com/app/apikey
+2. Click "Create API Key"
+3. Select a Google Cloud project or create a new one
+4. Copy the API key to your `.env.local` file
 
 ### MongoDB Atlas (Free Tier)
 1. Visit https://www.mongodb.com/cloud/atlas
@@ -130,6 +130,20 @@ The application will be available at:
 ├── .env.local         # Frontend environment
 └── package.json       # Frontend package.json
 ```
+
+## Deployment
+
+For detailed deployment instructions to Render (or other platforms), see [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md).
+
+### Quick Deploy to Render
+
+1. Push your code to GitHub
+2. Create a MongoDB Atlas cluster (free tier)
+3. Deploy backend as Web Service on Render
+4. Deploy frontend as Static Site on Render
+5. Configure environment variables
+
+See the full deployment guide for step-by-step instructions.
 
 ## License
 
