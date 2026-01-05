@@ -12,9 +12,11 @@ export const filterTasks = (tasks, filter) => {
             );
 
         case FILTER_OPTIONS.UPCOMING:
-            return tasks.filter(task =>
-                !task.completed && task.dueDate && isAfter(new Date(task.dueDate), now)
-            );
+            return tasks.filter(task => {
+                if (!task.dueDate || task.completed) return false;
+                const taskDate = new Date(task.dueDate);
+                return !isToday(taskDate) && isAfter(taskDate, now);
+            });
 
         case FILTER_OPTIONS.COMPLETED:
             return tasks.filter(task => task.completed);

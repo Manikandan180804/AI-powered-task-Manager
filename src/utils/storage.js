@@ -154,11 +154,18 @@ export const saveSettings = (settings) => {
 // Load API key
 export const loadApiKey = () => {
     try {
-        // First check environment variable
-        const envApiKey = import.meta.env.VITE_HUGGINGFACE_API_KEY;
-        if (envApiKey && envApiKey !== 'your_api_key_here') {
+        // Check for Gemini API key first (new format)
+        let envApiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+        // Fallback to Hugging Face key for backward compatibility
+        if (!envApiKey || envApiKey === 'your_api_key_here' || envApiKey === 'your_gemini_api_key_here') {
+            envApiKey = import.meta.env.VITE_HUGGINGFACE_API_KEY;
+        }
+
+        if (envApiKey && envApiKey !== 'your_api_key_here' && envApiKey !== 'your_gemini_api_key_here') {
             return envApiKey;
         }
+
         // Fallback to localStorage
         return localStorage.getItem(STORAGE_KEYS.API_KEY) || '';
     } catch (error) {
