@@ -146,6 +146,12 @@ Add these environment variables:
 | `VITE_API_URL` | Your backend URL from Step 3.3 + `/api` (e.g., `https://ai-task-manager-api.onrender.com/api`) |
 | `VITE_GEMINI_API_KEY` | Your Gemini API key |
 
+> [!IMPORTANT]
+> **CRITICAL**: The `VITE_API_URL` MUST end with `/api`.
+> - ❌ Incorrect: `https://ai-task-manager-api.onrender.com`
+> - ✅ Correct: `https://ai-task-manager-api.onrender.com/api`
+> If you miss the `/api` suffix, the frontend will get 404 errors (HTML responses) when trying to reach the backend.
+
 ### 4.3 Configure Redirects
 
 1. After creating the static site, go to **"Redirects/Rewrites"**
